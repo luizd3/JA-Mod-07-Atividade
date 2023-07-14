@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class MedicoEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long matricula;
 

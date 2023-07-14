@@ -4,9 +4,7 @@ import com.ld.hospitalapi.entities.MedicoEntity;
 import com.ld.hospitalapi.repositories.MedicoRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,5 +22,10 @@ public class HospitalController {
     public ResponseEntity<List<MedicoEntity>> findAll() {
         List<MedicoEntity> medicos = medicoRepository.findAll();
         return new ResponseEntity<>(medicos, HttpStatus.OK);
+    }
+
+    @PostMapping("/medicos")
+    public void createNew(@RequestBody final MedicoEntity medicoEntity) {
+        this.medicoRepository.save(medicoEntity);
     }
 }
