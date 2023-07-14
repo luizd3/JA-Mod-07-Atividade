@@ -2,6 +2,7 @@ package com.ld.hospitalapi.controllers;
 
 import com.ld.hospitalapi.entities.MedicoEntity;
 import com.ld.hospitalapi.repositories.MedicoRepository;
+import com.ld.hospitalapi.services.MedicoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,36 +13,35 @@ import java.util.List;
 @RequestMapping("/hospital/medicos")
 public class MedicoController {
 
-    private final MedicoRepository medicoRepository;
+    private final MedicoService medicoService;
 
-    public MedicoController(MedicoRepository medicoRepository) {
-        this.medicoRepository = medicoRepository;
+    public MedicoController(MedicoService medicoService) {
+        this.medicoService = medicoService;
     }
 
     @GetMapping
     public ResponseEntity<List<MedicoEntity>> findAll() {
-        List<MedicoEntity> medicos = medicoRepository.findAll();
+        List<MedicoEntity> medicos = medicoService.findAll();
         return new ResponseEntity<>(medicos, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<String> createNew(@RequestBody final MedicoEntity medicoEntity) {
-        this.medicoRepository.save(medicoEntity);
+        this.medicoService.createNew(medicoEntity);
         String message = "Médico cadastrado";
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<String> update(@RequestBody final MedicoEntity medicoEntity) {
-        this.medicoRepository.save(medicoEntity);
+        this.medicoService.update(medicoEntity);
         String message = "Atualização realizada";
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable("id") final Long id) {
-        this.medicoRepository.deleteById(id);
-        String message = "Registro de médico apagado";
-        return new ResponseEntity<>(message, HttpStatus.NO_CONTENT);
+    public ResponseEntity delete(@PathVariable("id") final Long id) {
+        this.medicoService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
