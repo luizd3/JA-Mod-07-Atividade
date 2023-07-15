@@ -2,7 +2,7 @@ package com.ld.hospitalapi.entities;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "historico_internacoes")
@@ -17,8 +17,12 @@ public class InternacaoEntity {
     @JoinColumn(name = "id_paciente")
     private PacienteEntity paciente;
 
-    private Date dataEntradaPaciente;
-    private Date dataSaidaPaciente;
+    @Column(name = "entrada_paciente", columnDefinition = "TIMESTAMP")
+    private LocalDateTime dataEntradaPaciente;
+
+    @Column(name = "saida_paciente", columnDefinition = "TIMESTAMP")
+    private LocalDateTime dataSaidaPaciente;
+
     private String diagnostico;
 
     @ManyToOne
@@ -28,7 +32,7 @@ public class InternacaoEntity {
     public InternacaoEntity() {
     }
 
-    public InternacaoEntity(Long id, PacienteEntity paciente, Date dataEntradaPaciente, Date dataSaidaPaciente, String diagnostico, MedicoEntity medico) {
+    public InternacaoEntity(Long id, PacienteEntity paciente, LocalDateTime dataEntradaPaciente, LocalDateTime dataSaidaPaciente, String diagnostico, MedicoEntity medico) {
         this.id = id;
         this.paciente = paciente;
         this.dataEntradaPaciente = dataEntradaPaciente;
@@ -53,19 +57,19 @@ public class InternacaoEntity {
         this.paciente = paciente;
     }
 
-    public Date getDataEntradaPaciente() {
+    public LocalDateTime getDataEntradaPaciente() {
         return dataEntradaPaciente;
     }
 
-    public void setDataEntradaPaciente(Date dataEntradaPaciente) {
+    public void setDataEntradaPaciente(LocalDateTime dataEntradaPaciente) {
         this.dataEntradaPaciente = dataEntradaPaciente;
     }
 
-    public Date getDataSaidaPaciente() {
+    public LocalDateTime getDataSaidaPaciente() {
         return dataSaidaPaciente;
     }
 
-    public void setDataSaidaPaciente(Date dataSaidaPaciente) {
+    public void setDataSaidaPaciente(LocalDateTime dataSaidaPaciente) {
         this.dataSaidaPaciente = dataSaidaPaciente;
     }
 
