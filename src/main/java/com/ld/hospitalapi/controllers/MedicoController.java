@@ -1,7 +1,6 @@
 package com.ld.hospitalapi.controllers;
 
 import com.ld.hospitalapi.entities.MedicoEntity;
-import com.ld.hospitalapi.repositories.MedicoRepository;
 import com.ld.hospitalapi.services.MedicoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -2,7 +2,7 @@ package com.ld.hospitalapi.entities;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "pacientes")
@@ -15,16 +15,18 @@ public class PacienteEntity {
 
     private String nome;
     private String telefone;
-    private Date data_nascimento;
+
+    @Column(name = "data_nascimento", columnDefinition = "DATE")
+    private LocalDate dataNascimento; // LocalDate registra com fuso horário local
 
     public PacienteEntity() {
     }
 
-    public PacienteEntity(Long id, String nome, String telefone, Date data_nascimento) {
+    public PacienteEntity(Long id, String nome, String telefone, LocalDate dataNascimento) {
         this.id = id;
         this.nome = nome;
         this.telefone = telefone;
-        this.data_nascimento = data_nascimento;
+        this.dataNascimento = dataNascimento;
     }
 
     public Long getId() {
@@ -51,11 +53,11 @@ public class PacienteEntity {
         this.telefone = telefone;
     }
 
-    public Date getData_nascimento() {
-        return data_nascimento;
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
     }
 
-    public void setData_nascimento(Date data_nascimento) {
-        this.data_nascimento = data_nascimento;
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
     }
 }
