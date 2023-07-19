@@ -32,7 +32,7 @@ public class PacienteControllerTests {
                    "dataNascimento": "2015-01-01"
                 }""";
 
-        // Testa apenas se o status HTTP é 200 (OK)
+        // Testa apenas se o status HTTP é 201 (CREATED)
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/hospital/pacientes")
                 .content(requestBody)
@@ -134,7 +134,7 @@ public class PacienteControllerTests {
                 .contentType("application/json")
                 .content(requestBody));
 
-        // Requisição DELETE para testar se o status HTTP é 4 (No Content)
+        // Requisição DELETE para testar se o status HTTP é 204 (No Content)
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/hospital/pacientes/1"))
                 .andExpect(status().isNoContent())
