@@ -18,12 +18,12 @@ public class InternacaoController {
         this.internacaoService = internacaoService;
     }
 
-    @GetMapping
+    @GetMapping(produces = "application/json;charset=UTF-8") // Necessário para não dar erro de codificação nos testes
     public ResponseEntity<List<InternacaoEntity>> findAll() {
         return new ResponseEntity<>(this.internacaoService.findAll(), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping(consumes = "application/json;charset=UTF-8") // Necessário para não dar erro de codificação nos testes
     public ResponseEntity<String> createNew(@RequestBody final InternacaoEntity internacaoEntity) {
         this.internacaoService.createNew(internacaoEntity);
         String message = "Internação registrada com sucesso.";
