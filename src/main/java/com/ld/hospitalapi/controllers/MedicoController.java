@@ -24,6 +24,12 @@ public class MedicoController {
         return new ResponseEntity<>(medicos, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/{id}", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<MedicoEntity> findById(@PathVariable("id") final Long id) {
+        MedicoEntity medico = medicoService.findById(id);
+        return new ResponseEntity<>(medico, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<String> createNew(@RequestBody final MedicoEntity medicoEntity) {
         this.medicoService.createNew(medicoEntity);

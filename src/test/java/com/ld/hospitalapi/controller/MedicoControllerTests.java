@@ -1,5 +1,7 @@
 package com.ld.hospitalapi.controller;
 
+import com.ld.hospitalapi.entities.MedicoEntity;
+import com.ld.hospitalapi.repositories.MedicoRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,22 +24,8 @@ public class MedicoControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
-    public void shouldCreateANewDoctor() throws Exception {
-        String requestBody = """
-                {
-                    "nome": "Marcelo Goes",
-                    "cargo": "Otorrinolaringologista",
-                    "departamento": "PS",
-                    "telefone": "11888888888"
-                }""";
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hospital/medicos")
-                        .content(requestBody)
-                        .contentType("application/json"))
-                .andExpect(status().isCreated());
-    }
+    @Autowired
+    private MedicoRepository medicoRepository;
 
     @Test
     public void shouldListAllDoctors() throws Exception {
@@ -53,19 +41,59 @@ public class MedicoControllerTests {
                 [{"matricula":1,"nome":"Marcelo Goes","cargo":"Otorrinolaringologista","departamento":"PS","telefone":"11888888888"}]""";
 
         mockMvc.perform(MockMvcRequestBuilders
-                .post("/hospital/medicos")
-                .content(requestBody)
-                .contentType("application/json"))
+                        .post("/hospital/medicos")
+                        .content(requestBody)
+                        .contentType("application/json"))
                 .andExpect(status().isCreated());
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                .get("/hospital/medicos"))
+                        .get("/hospital/medicos"))
                 .andExpect(status().isOk())
                 .andReturn();
 
         String responseBody = mvcResult.getResponse().getContentAsString();
 
         Assertions.assertEquals(expectedResponseBody, responseBody);
+    }
+
+    @Test
+    public void shouldReturnADoctorGivenItsId() throws Exception {
+        MedicoEntity medico1 = getMedicoDefault();
+        MedicoEntity medico2 = getMedicoDefault();
+        medico2.setMatricula(2L);
+        medico2.setNome("Marcos Antônio");
+
+        medicoRepository.save(medico1);
+        medicoRepository.save(medico2);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                        .get("/hospital/medicos/2"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        String expectedResponseBody = """
+                {"matricula":2,"nome":"Marcos Antônio","cargo":"Ortopedista","departamento":"PS","telefone":"11888888888"}""";
+
+        Assertions.assertEquals(expectedResponseBody, responseBody);
+    }
+
+    @Test
+    public void shouldCreateANewDoctor() throws Exception {
+        String requestBody = """
+                {
+                    "nome": "Marcelo Goes",
+                    "cargo": "Otorrinolaringologista",
+                    "departamento": "PS",
+                    "telefone": "11888888888"
+                }""";
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/hospital/medicos")
+                        .content(requestBody)
+                        .contentType("application/json"))
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -142,5 +170,15 @@ public class MedicoControllerTests {
         String responseBody = mvcResult.getResponse().getContentAsString();
 
         Assertions.assertEquals(expectedResponseBody, responseBody);
+    }
+
+    private MedicoEntity getMedicoDefault() {
+        MedicoEntity medico = new MedicoEntity();
+        medico.setMatricula(1L);
+        medico.setNome("Marcelo Gomes");
+        medico.setCargo("Ortopedista");
+        medico.setDepartamento("PS");
+        medico.setTelefone("11888888888");
+        return medico;
     }
 }
