@@ -1,5 +1,8 @@
 package com.ld.hospitalapi.controller;
 
+import com.ld.hospitalapi.entities.PacienteEntity;
+import com.ld.hospitalapi.repositories.PacienteRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -9,6 +12,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -23,22 +28,8 @@ public class PacienteControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
-    public void shouldCreateANewPacient() throws Exception {
-        String requestBody = """
-                {
-                   "nome": "João Silva",
-                   "telefone": "11999999999",
-                   "dataNascimento": "2015-01-01"
-                }""";
-
-        // Testa apenas se o status HTTP é 201 (CREATED)
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/hospital/pacientes")
-                .content(requestBody)
-                .contentType("application/json"))
-                .andExpect(status().isCreated());
-    }
+    @Autowired
+    private PacienteRepository pacienteRepository;
 
     @Test
     public void shouldListAllPacients() throws Exception {
@@ -60,7 +51,7 @@ public class PacienteControllerTests {
 
         // Requisição para testar se o status HTTP é 200 (OK)
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                .get("/hospital/pacientes"))
+                        .get("/hospital/pacientes"))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -69,6 +60,45 @@ public class PacienteControllerTests {
         // Testa se o corpo da resposta é igual ao esperado
         assertEquals(expectedResponseBody, responseBody);
 
+    }
+
+    @Test
+    public void shouldReturnAPacientGivenItsId() throws Exception {
+        PacienteEntity paciente1 = getPacienteDefault();
+        PacienteEntity paciente2 = getPacienteDefault();
+        paciente2.setId(2L);
+        paciente2.setNome("Hugo Oliveira");
+        pacienteRepository.save(paciente1);
+        pacienteRepository.save(paciente2);
+
+        String expectedResponseBody = """
+                {"id":2,"nome":"Hugo Oliveira","telefone":"11999999999","dataNascimento":"2015-01-01"}""";
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/hospital/pacientes/2"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        Assertions.assertEquals(expectedResponseBody, responseBody);
+    }
+
+    @Test
+    public void shouldCreateANewPacient() throws Exception {
+        String requestBody = """
+                {
+                   "nome": "João Silva",
+                   "telefone": "11999999999",
+                   "dataNascimento": "2015-01-01"
+                }""";
+
+        // Testa apenas se o status HTTP é 201 (CREATED)
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/hospital/pacientes")
+                .content(requestBody)
+                .contentType("application/json"))
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -150,5 +180,14 @@ public class PacienteControllerTests {
 
         // Testa se o corpo da resposta é igual ao esperado (lista vazia)
         assertEquals(expectedResponseBody, responseBody);
+    }
+
+    private PacienteEntity getPacienteDefault() {
+        PacienteEntity paciente = new PacienteEntity();
+        paciente.setId(1L);
+        paciente.setNome("João Silva");
+        paciente.setTelefone("11999999999");
+        paciente.setDataNascimento(LocalDate.parse("2015-01-01"));
+        return paciente;
     }
 }
