@@ -60,6 +60,28 @@ public class InternacaoControllerTests {
     }
 
     @Test
+    public void shouldReturnAHospitalizationGivenItsId() throws Exception {
+        medicoRepository.save(getMedicoDefault());
+        pacienteRepository.save(getPacienteDefault());
+        internacaoRepository.save(getInternacaoDefault());
+        InternacaoEntity internacao2 = getInternacaoDefault();
+        internacao2.setDiagnostico("diagnóstico 2");
+        internacaoRepository.save(internacao2);
+
+        String expectedResponseBody = """
+                {"id":2,"paciente":{"id":1,"nome":"João Silva","telefone":"11999999999","dataNascimento":"2015-01-01"},"dataEntradaPaciente":"2023-04-01T10:30:15","dataSaidaPaciente":"2023-04-03T07:11:56","diagnostico":"diagnóstico 2","medico":{"matricula":1,"nome":"Marcelo Gomes","cargo":"Ortopedista","departamento":"PS","telefone":"11888888888"}}""";
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/hospital/internacoes/2"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        Assertions.assertEquals(expectedResponseBody, responseBody);
+    }
+
+    @Test
     public void shouldCreateANewHospitalization() throws Exception {
         medicoRepository.save(getMedicoDefault());
         pacienteRepository.save(getPacienteDefault());
