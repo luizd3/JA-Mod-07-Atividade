@@ -2,6 +2,7 @@ package com.ld.hospitalapi.services;
 
 import com.ld.hospitalapi.entities.MedicoEntity;
 import com.ld.hospitalapi.repositories.MedicoRepository;
+import com.ld.hospitalapi.views.MedicoCount;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -40,5 +41,9 @@ public class MedicoService {
             return medico.get();
         else
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Médico não encontrado");
+    }
+
+    public List<MedicoCount> countTotalDoctorsByDepartment() {
+        return this.medicoRepository.countTotalDoctorsByDepartment();
     }
 }

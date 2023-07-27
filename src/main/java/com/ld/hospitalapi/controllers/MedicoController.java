@@ -2,6 +2,7 @@ package com.ld.hospitalapi.controllers;
 
 import com.ld.hospitalapi.entities.MedicoEntity;
 import com.ld.hospitalapi.services.MedicoService;
+import com.ld.hospitalapi.views.MedicoCount;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,13 @@ public class MedicoController {
     public ResponseEntity<MedicoEntity> findById(@PathVariable("id") final Long id) {
         MedicoEntity medico = medicoService.findById(id);
         return new ResponseEntity<>(medico, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/totalPorDepartamento")
+    public ResponseEntity<List<MedicoCount>> countTotalDoctorsByDepartment() {
+        List<MedicoCount> medicosCountByDepartmentList =
+                medicoService.countTotalDoctorsByDepartment();
+        return new ResponseEntity<>(medicosCountByDepartmentList, HttpStatus.OK);
     }
 
     @PostMapping
