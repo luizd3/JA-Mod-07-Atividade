@@ -82,6 +82,36 @@ public class InternacaoControllerTests {
     }
 
     @Test
+    public void shouldReturnTotalHospitalizationsByPacient() throws Exception {
+        PacienteEntity paciente1 = new PacienteEntity(1L, "Paciente 1", "11999999999", LocalDate.parse("2015-01-01"));
+        PacienteEntity paciente2 = new PacienteEntity(2L, "Paciente 2", "11999999999", LocalDate.parse("1987-01-01"));
+        pacienteRepository.save(paciente1);
+        pacienteRepository.save(paciente2);
+
+        MedicoEntity medico = new MedicoEntity(1L, "Medico 1", "Cargo 1", "Departamento 1", "11999999999");
+        medicoRepository.save(medico);
+
+        InternacaoEntity internacao1 = new InternacaoEntity(1L, paciente1, LocalDateTime.parse("2023-04-01T10:30:15"), LocalDateTime.parse("2023-04-03T07:11:56"), "Diagnóstico teste", medico);
+        InternacaoEntity internacao2 = new InternacaoEntity(2L, paciente2, LocalDateTime.parse("2023-04-01T10:30:15"), LocalDateTime.parse("2023-04-03T07:11:56"), "Diagnóstico teste", medico);
+        InternacaoEntity internacao3 = new InternacaoEntity(3L, paciente2, LocalDateTime.parse("2023-04-01T10:30:15"), LocalDateTime.parse("2023-04-03T07:11:56"), "Diagnóstico teste", medico);
+        internacaoRepository.save(internacao1);
+        internacaoRepository.save(internacao2);
+        internacaoRepository.save(internacao3);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/hospital/internacoes/total-por-paciente"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        String expectedResponseBody = """
+                [{"nomePaciente":"Paciente 2","quantidadeDeInternacoes":2},{"nomePaciente":"Paciente 1","quantidadeDeInternacoes":1}]""";
+
+        Assertions.assertEquals(expectedResponseBody, responseBody);
+    }
+
+    @Test
     public void shouldCreateANewHospitalization() throws Exception {
         medicoRepository.save(getMedicoDefault());
         pacienteRepository.save(getPacienteDefault());

@@ -2,6 +2,7 @@ package com.ld.hospitalapi.controllers;
 
 import com.ld.hospitalapi.entities.InternacaoEntity;
 import com.ld.hospitalapi.services.InternacaoService;
+import com.ld.hospitalapi.views.InternacaoQuantPorPaciente;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,11 @@ public class InternacaoController {
     @GetMapping(value = "/{id}", produces = "application/json;charset=UTF-8")
     public ResponseEntity<InternacaoEntity> findById(@PathVariable final Long id) {
         return new ResponseEntity<>(this.internacaoService.findById(id), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/total-por-paciente", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<List<InternacaoQuantPorPaciente>> countTotalHospitalizationsByPacient() {
+        return new ResponseEntity<>(this.internacaoService.countTotalHospitalizationsByPacient(), HttpStatus.OK);
     }
 
     @PostMapping(consumes = "application/json;charset=UTF-8") // Necessário para não dar erro de codificação nos testes

@@ -1,15 +1,15 @@
 package com.ld.hospitalapi.views;
 
-public class MedicoCount {
+public class MedicoQuantPorDepartamento {
     private String departamento;
     private Long quantidadeDeMedicos;
 
-    public MedicoCount(String departamento, Long quantidadeDeMedicos) {
+    public MedicoQuantPorDepartamento(String departamento, Long quantidadeDeMedicos) {
         this.departamento = departamento;
         this.quantidadeDeMedicos = quantidadeDeMedicos;
     }
 
-    public MedicoCount() {
+    public MedicoQuantPorDepartamento() {
     }
 
     public String getDepartamento() {

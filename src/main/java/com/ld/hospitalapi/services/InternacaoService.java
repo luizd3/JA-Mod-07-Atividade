@@ -2,6 +2,7 @@ package com.ld.hospitalapi.services;
 
 import com.ld.hospitalapi.entities.InternacaoEntity;
 import com.ld.hospitalapi.repositories.InternacaoRepository;
+import com.ld.hospitalapi.views.InternacaoQuantPorPaciente;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -40,5 +41,9 @@ public class InternacaoService {
             return internacao.get();
         else
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Internação não encontrada");
+    }
+
+    public List<InternacaoQuantPorPaciente> countTotalHospitalizationsByPacient() {
+        return this.internacaoRepository.countTotalHospitalizationsByPacient();
     }
 }
