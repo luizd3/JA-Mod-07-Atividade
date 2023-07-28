@@ -1,8 +1,8 @@
 package com.ld.hospitalapi.controllers;
 
-import com.ld.hospitalapi.adapters.MedicosByDepartmentsAdapter;
+import com.ld.hospitalapi.adapters.MedicosPorDepartamentoAdapter;
 import com.ld.hospitalapi.entities.MedicoEntity;
-import com.ld.hospitalapi.entities.MedicosByDepartments;
+import com.ld.hospitalapi.entities.MedicosPorDepartamento;
 import com.ld.hospitalapi.services.MedicoService;
 import com.ld.hospitalapi.views.MedicoCount;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class MedicoController {
     private MedicoService medicoService;
 
     @Autowired
-    private MedicosByDepartmentsAdapter medicosByDepartmentsAdapter;
+    private MedicosPorDepartamentoAdapter medicosPorDepartamentoAdapter;
 
     @GetMapping
     public ResponseEntity<List<MedicoEntity>> findAll() {
@@ -42,10 +42,10 @@ public class MedicoController {
     }
 
     @GetMapping(value = "/por-departamento", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<List<MedicosByDepartments>> doctorsByDepartment() {
+    public ResponseEntity<List<MedicosPorDepartamento>> doctorsByDepartment() {
         List<MedicoEntity> medicos = medicoService.findAll();
-        List<MedicosByDepartments> medicosByDepartments =
-                medicosByDepartmentsAdapter.getMedicosByDepartments(medicos);
+        List<MedicosPorDepartamento> medicosByDepartments =
+                medicosPorDepartamentoAdapter.getMedicosPorDepartamento(medicos);
         return new ResponseEntity<>(medicosByDepartments, HttpStatus.OK);
     }
 

@@ -2,17 +2,17 @@ package com.ld.hospitalapi.entities;
 
 import java.util.List;
 
-public class MedicosByDepartments {
+public class MedicosPorDepartamento {
 
     private String departamento;
     private List<String> medicos;
 
-    public MedicosByDepartments(String departamento, List<String> medicos) {
+    public MedicosPorDepartamento(String departamento, List<String> medicos) {
         this.departamento = departamento;
         this.medicos = medicos;
     }
 
-    public MedicosByDepartments() {
+    public MedicosPorDepartamento() {
     }
 
     public String getDepartamento() {
