@@ -9,7 +9,7 @@ import java.util.List;
 @Component
 public class MedicosPorDepartamentoAdapter {
 
-    public List<MedicosPorDepartamento> getMedicosPorDepartamento(List<MedicoEntity> medicos) {
+    public List<MedicosPorDepartamento> adaptMedicosPorDepartamento(List<MedicoEntity> medicos) {
         List<String> departamentos = medicos.stream()
                 .map(MedicoEntity::getDepartamento).distinct().toList();
 

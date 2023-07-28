@@ -45,7 +45,7 @@ public class MedicoController {
     public ResponseEntity<List<MedicosPorDepartamento>> doctorsByDepartment() {
         List<MedicoEntity> medicos = medicoService.findAll();
         List<MedicosPorDepartamento> medicosByDepartments =
-                medicosPorDepartamentoAdapter.getMedicosPorDepartamento(medicos);
+                medicosPorDepartamentoAdapter.adaptMedicosPorDepartamento(medicos);
         return new ResponseEntity<>(medicosByDepartments, HttpStatus.OK);
     }
 
