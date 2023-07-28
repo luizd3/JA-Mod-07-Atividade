@@ -80,6 +80,60 @@ public class MedicoControllerTests {
     }
 
     @Test
+    public void shouldReturnTotalDoctorsByDepartment() throws Exception {
+        MedicoEntity medico1 = new MedicoEntity(1L, "Médico 1", "Cargo 1", "Departamento 1", "11888888888");
+        MedicoEntity medico2 = new MedicoEntity(2L, "Médico 2", "Cargo 2", "Departamento 1", "11888888888");
+        MedicoEntity medico3 = new MedicoEntity(3L, "Médico 3", "Cargo 3", "Departamento 1", "11888888888");
+        MedicoEntity medico4 = new MedicoEntity(4L, "Médico 4", "Cargo 4", "Departamento 2", "11888888888");
+        MedicoEntity medico5 = new MedicoEntity(5L, "Médico 5", "Cargo 5", "Departamento 2", "11888888888");
+
+        medicoRepository.save(medico1);
+        medicoRepository.save(medico2);
+        medicoRepository.save(medico3);
+        medicoRepository.save(medico4);
+        medicoRepository.save(medico5);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/hospital/medicos/total-por-departamento"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        String expectedResponseBody = """
+                [{"departamento":"Departamento 2","quantidadeDeMedicos":2},{"departamento":"Departamento 1","quantidadeDeMedicos":3}]""";
+
+        Assertions.assertEquals(expectedResponseBody, responseBody);
+    }
+
+    @Test
+    public void shouldReturnDoctorsByDepartment() throws Exception {
+        MedicoEntity medico1 = new MedicoEntity(1L, "Médico 1", "Cargo 1", "Departamento 1", "11888888888");
+        MedicoEntity medico2 = new MedicoEntity(2L, "Médico 2", "Cargo 2", "Departamento 1", "11888888888");
+        MedicoEntity medico3 = new MedicoEntity(3L, "Médico 3", "Cargo 3", "Departamento 1", "11888888888");
+        MedicoEntity medico4 = new MedicoEntity(4L, "Médico 4", "Cargo 4", "Departamento 2", "11888888888");
+        MedicoEntity medico5 = new MedicoEntity(5L, "Médico 5", "Cargo 5", "Departamento 2", "11888888888");
+
+        medicoRepository.save(medico1);
+        medicoRepository.save(medico2);
+        medicoRepository.save(medico3);
+        medicoRepository.save(medico4);
+        medicoRepository.save(medico5);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/hospital/medicos/por-departamento"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        String expectedResponseBody = """
+                [{"departamento":"Departamento 1","medicos":["Médico 1","Médico 2","Médico 3"]},{"departamento":"Departamento 2","medicos":["Médico 4","Médico 5"]}]""";
+
+        Assertions.assertEquals(expectedResponseBody, responseBody);
+    }
+
+    @Test
     public void shouldCreateANewDoctor() throws Exception {
         String requestBody = """
                 {

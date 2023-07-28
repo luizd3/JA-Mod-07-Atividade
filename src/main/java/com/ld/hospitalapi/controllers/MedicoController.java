@@ -34,14 +34,14 @@ public class MedicoController {
         return new ResponseEntity<>(medico, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/total-por-departamento")
+    @GetMapping(value = "/total-por-departamento", produces = "application/json;charset=UTF-8")
     public ResponseEntity<List<MedicoCount>> countTotalDoctorsByDepartment() {
         List<MedicoCount> medicosCountByDepartmentList =
                 medicoService.countTotalDoctorsByDepartment();
         return new ResponseEntity<>(medicosCountByDepartmentList, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/por-departamento")
+    @GetMapping(value = "/por-departamento", produces = "application/json;charset=UTF-8")
     public ResponseEntity<List<MedicosByDepartments>> doctorsByDepartment() {
         List<MedicoEntity> medicos = medicoService.findAll();
         List<MedicosByDepartments> medicosByDepartments =
