@@ -112,6 +112,36 @@ public class InternacaoControllerTests {
     }
 
     @Test
+    public void shouldReturnHospitalizationsByPacient() throws Exception {
+        PacienteEntity paciente1 = new PacienteEntity(1L, "Paciente 1", "11999999999", LocalDate.parse("2015-01-01"));
+        PacienteEntity paciente2 = new PacienteEntity(2L, "Paciente 2", "11999999999", LocalDate.parse("1987-01-01"));
+        pacienteRepository.save(paciente1);
+        pacienteRepository.save(paciente2);
+
+        MedicoEntity medico = new MedicoEntity(1L, "Medico 1", "Cargo 1", "Departamento 1", "11999999999");
+        medicoRepository.save(medico);
+
+        InternacaoEntity internacao1 = new InternacaoEntity(1L, paciente1, LocalDateTime.parse("2023-04-01T10:30:15"), LocalDateTime.parse("2023-04-03T07:11:56"), "Diagnóstico teste 1", medico);
+        InternacaoEntity internacao2 = new InternacaoEntity(2L, paciente2, LocalDateTime.parse("2023-04-01T10:30:15"), LocalDateTime.parse("2023-04-03T07:11:56"), "Diagnóstico teste 2", medico);
+        InternacaoEntity internacao3 = new InternacaoEntity(3L, paciente2, LocalDateTime.parse("2023-04-01T10:30:15"), LocalDateTime.parse("2023-04-03T07:11:56"), "Diagnóstico teste 3", medico);
+        internacaoRepository.save(internacao1);
+        internacaoRepository.save(internacao2);
+        internacaoRepository.save(internacao3);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                        .get("/hospital/internacoes/por-paciente"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        String expectedResponseBody = """
+                [{"paciente":{"id":1,"nome":"Paciente 1","telefone":"11999999999","dataNascimento":"2015-01-01"},"internacoes":[{"id":1,"paciente":{"id":1,"nome":"Paciente 1","telefone":"11999999999","dataNascimento":"2015-01-01"},"dataEntradaPaciente":"2023-04-01T10:30:15","dataSaidaPaciente":"2023-04-03T07:11:56","diagnostico":"Diagnóstico teste 1","medico":{"matricula":1,"nome":"Medico 1","cargo":"Cargo 1","departamento":"Departamento 1","telefone":"11999999999"}}]},{"paciente":{"id":2,"nome":"Paciente 2","telefone":"11999999999","dataNascimento":"1987-01-01"},"internacoes":[{"id":2,"paciente":{"id":2,"nome":"Paciente 2","telefone":"11999999999","dataNascimento":"1987-01-01"},"dataEntradaPaciente":"2023-04-01T10:30:15","dataSaidaPaciente":"2023-04-03T07:11:56","diagnostico":"Diagnóstico teste 2","medico":{"matricula":1,"nome":"Medico 1","cargo":"Cargo 1","departamento":"Departamento 1","telefone":"11999999999"}},{"id":3,"paciente":{"id":2,"nome":"Paciente 2","telefone":"11999999999","dataNascimento":"1987-01-01"},"dataEntradaPaciente":"2023-04-01T10:30:15","dataSaidaPaciente":"2023-04-03T07:11:56","diagnostico":"Diagnóstico teste 3","medico":{"matricula":1,"nome":"Medico 1","cargo":"Cargo 1","departamento":"Departamento 1","telefone":"11999999999"}}]}]""";
+
+        Assertions.assertEquals(expectedResponseBody, responseBody);
+    }
+
+    @Test
     public void shouldCreateANewHospitalization() throws Exception {
         medicoRepository.save(getMedicoDefault());
         pacienteRepository.save(getPacienteDefault());
